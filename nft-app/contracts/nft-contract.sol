@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 // Imports from openzeppelin's repo
+// Works only if deployed on Remix: http://remix.ethereum.org
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC1155/ERC1155.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
 

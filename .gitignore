@@ -1,37 +1,37 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+/nft-dashboard/node_modules
+/nft-dashboard/.pnp
+/nft-dashboard.pnp.js
 
 # testing
-/coverage
+/nft-dashboard/coverage
 
 # next.js
-/.next/
-/out/
+/nft-dashboard/.next/
+/nft-dashboard/out/
 
 # production
-/build
+/nft-dashboard/build
 
 # misc
-.DS_Store
-*.pem
+/nft-dashboard.DS_Store
+/nft-dashboard*.pem
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+/nft-dashboardnpm-debug.log*
+/nft-dashboardyarn-debug.log*
+/nft-dashboardyarn-error.log*
 
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+/nft-dashboard/.env.local
+/nft-dashboard/.env.development.local
+/nft-dashboard/.env.test.local
+/nft-dashboard/.env.production.local
 
 # vercel
-.vercel
+/nft-dashboard/.vercel
 
 # typescript
-*.tsbuildinfo
+/nft-dashboard/*.tsbuildinfo
