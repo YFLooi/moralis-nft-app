@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Deployment made to https://gppanowoee5f.usemoralis.com -->
+    <title>Moralis NFT app</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+
+    <link
+      key="bootstrap"
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container my-3 px-3 py-3">
+      <h1>NFT manager</h1>
+      <div class="row" id="mint-controls">
+        <div class="px-2 py-2">
+          <!-- Pre-filled when clicking the nft card button -->
+          <label>Token id</label>
+          <input id="token_id_input" type="number" />
+        </div>
+        <div class="px-2 py-2">
+          <label>Amount</label>
+          <input id="amount_input" type="number" />
+        </div>
+        <div class="px-2 py-2">
+          <label>Address</label>
+          <input id="address_input" type="text" />
+        </div>
+        <div class="px-2 py-2">
+          <button class="btn btn-primary" id="submit_mint">Mint</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Do this because we cannot import as module -->
+    <script type="text/javascript" src="./abi.js"></script>
+    <script type="text/javascript" src="./mint.js"></script>
+  </body>
+</html>
