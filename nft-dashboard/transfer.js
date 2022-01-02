@@ -10,36 +10,22 @@ Moralis.start({
   appId,
 });
 
-async function mint() {
+async function transfer() {
   // int expected by smart contract for tokenid and amount. Address should be string
   const tokenId = parseInt(document.getElementById("token_id_input").value);
   const amount = parseInt(document.getElementById("amount_input").value);
   const address = document.getElementById("address_input").value;
 
-  /**
-   * Old way to interact with contract functions and send token with web3.
-   * I'll need my smart contract's ABI to do this
-   * Contract ABI = specified interface of smart contract which tell JS
-   * what functions are available, its arguments, and what it returns
-   */
-  /**
-   * Moralis APIs to interact with contract functions and send token with web3?
-   * Have in runContractFunction, but only works with READ functions. We're writing here
-   * https://docs.moralis.io/moralis-server/web3-sdk/native
-   */
-  const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-
-  contract.methods
-    // mint() is a method defined in the smart contract
-    .mint(address, tokenId, amount)
-    // value: 0 (gas fee) since minting is free
-    .send({ from: address, value: 0 })
-    .on("receipt", () => {
-      // Runs after blockchain confirms mint is complete
-      alert(
-        `Minting of ${amount} token for tokenId ${tokenId} to account ${accounts[0]} complete`
-      );
-    });
+  // ref: https://docs.moralis.io/moralis-server/sending-assets
+  const options = {
+    type: "erc1155",
+    receiver: address,
+    contractAddress: CONTRACT_ADDRESS,
+    tokenId: tokenId,
+    amount: amount,
+  };
+  const result = await Moralis.transfer(options);
+  console.log(result);
 }
 
 async function moralisLogin() {
@@ -64,13 +50,12 @@ async function initialiseApp() {
   const nftId = urlParams.get("nftId");
   console.log(`nftId provided: ${nftId}`);
 
-  // auto-fill token id and current logged-in user's address
+  // auto-fill token id. Input address to target wallet manually
   document.getElementById("token_id_input").value = nftId;
-  document.getElementById("address_input").value = accounts[0];
 }
 
 // Listeners
-document.getElementById("submit_mint").onclick = mint;
+document.getElementById("submit_transfer").onclick = transfer;
 
 // Have it run each time page is loaded
 initialiseApp();

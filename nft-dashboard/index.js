@@ -88,6 +88,9 @@ function renderInventory(nftArray) {
           <a href="/nft-dashboard/mint.html?nftId=${
             nft.token_id
           }" class="btn btn-success">Mint</a>
+          <a href="/nft-dashboard/transfer.html?nftId=${
+            nft.token_id
+          }" class="btn btn-warning">Transfer</a>
         </div>
       </div>
     `;

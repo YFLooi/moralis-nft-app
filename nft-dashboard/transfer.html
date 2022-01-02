@@ -15,7 +15,7 @@
   </head>
   <body>
     <div class="container my-3 px-3 py-3">
-      <h1>NFT minting manager</h1>
+      <h1>NFT transfer manager</h1>
       <div class="row" id="mint-controls">
         <div class="px-2 py-2">
           <!-- Pre-filled when clicking the nft card button -->
@@ -31,13 +31,12 @@
           <input id="address_input" type="text" />
         </div>
         <div class="px-2 py-2">
-          <button class="btn btn-primary" id="submit_mint">Mint</button>
+          <button class="btn btn-primary" id="submit_transfer">Transfer</button>
         </div>
       </div>
     </div>
 
     <!-- Do this because we cannot import as module -->
-    <script type="text/javascript" src="./abi.js"></script>
-    <script type="text/javascript" src="./mint.js"></script>
+    <script type="text/javascript" src="./transfer.js"></script>
   </body>
 </html>

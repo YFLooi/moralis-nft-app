@@ -1,3 +1,4 @@
+// abi for smart contract of id 0xce6b4f3f56e3b001fbc994271c4e3ad0f78447b3
 const contractAbi = [
   {
     inputs: [],
