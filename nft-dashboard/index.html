@@ -15,8 +15,12 @@
   <body>
     <h1>Moralis NFT app dashboard</h1>
     <div>
-      <button id="btn-login">Moralis Metamask Login</button>
-      <button id="btn-logout">Logout</button>
+      <button id="btn-login" onclick="moralisLogin()">
+        Login to your wallet
+      </button>
+      <button id="btn-logout" onclick="moralisLogout()">
+        Logout of your wallet
+      </button>
     </div>
     <div class="container my-3">
       <div class="row" id="inventory-display"></div>

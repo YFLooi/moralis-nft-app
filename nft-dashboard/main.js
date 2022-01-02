@@ -24,11 +24,41 @@ async function fetchNftMetadata(nftArray) {
       .then((res) => {
         return res.json();
       })
-      .then((res) => {
-        const parsedRes = JSON.parse(res.result);
-        const newNftObj = { ...nftArray[i], metadata: parsedRes };
+      .then(async (res) => {
+        /**
+         * Returns an object with number of NFT transfers and an array with
+         * all owners of NFT items within a given contract collection (asynchronous).
+         * address = contract address =  nftArray[i].token_address
+         */
+        const options = {
+          address: nftArray[i].token_address,
+          token_id: nftId,
+          chain: "mumbai",
+        };
+        // token == nft
+        const tokenOwnerData = await Moralis.Web3API.token.getTokenIdOwners(
+          options
+        );
+        console.log(
+          `Previous owner(s) of nft with id ${nftId}: ${JSON.stringify(
+            tokenOwnerData,
+            null,
+            2
+          )}`
+        );
+        const tokenOwners = [];
+        tokenOwnerData.result.forEach((token) => {
+          tokenOwners.push(token.owner_of);
+        });
 
-        console.log(`newNftObj: ${JSON.stringify(newNftObj, null, 2)}`);
+        const parsedRes = JSON.parse(res.result);
+        const newNftObj = {
+          ...nftArray[i],
+          metadata: parsedRes,
+          owners: tokenOwners,
+        };
+
+        // console.log(`newNftObj: ${JSON.stringify(newNftObj, null, 2)}`);
         nftWithMetadata.push(newNftObj);
       })
       .catch((err) => {
@@ -53,6 +83,11 @@ function renderInventory(nftArray) {
         <div class="card-body">
           <h5 class="card-title">${nft.metadata.name}</h5>
           <p class="card-text">${nft.metadata.description}</p>
+          <p class="card-text">Number of owners: ${nft.owners?.length}</p>
+          <p class="card-text">Tokens in circulation: ${nft.amount}</p>
+          <a href="/nft-dashboard/mint.html?nftId=${
+            nft.token_id
+          }" class="btn btn-success">Mint</a>
         </div>
       </div>
     `;
@@ -64,15 +99,28 @@ function renderInventory(nftArray) {
   }
 }
 
-async function initialiseApp() {
+async function moralisLogin() {
   let currentUser = Moralis.User.current();
 
   if (!currentUser) {
     // logs in user
     currentUser = await Moralis.Web3.authenticate();
   }
-
   console.log("User is signed in");
+}
+
+async function moralisLogout() {
+  let currentUser = Moralis.User.current();
+
+  if (currentUser) {
+    // logs out user
+    currentUser = await Moralis.User.logOut();
+  }
+  console.log("User is signed out");
+}
+
+async function initialiseApp() {
+  await moralisLogin();
 
   // address = contract address
   // chain = network it was deployed on. Tends to follow chain name
@@ -83,7 +131,7 @@ async function initialiseApp() {
     chain: "mumbai",
   };
   let allNft = await Moralis.Web3API.token.getAllTokenIds(options);
-  console.log(`allNft obtained: ${JSON.stringify(allNft, null, 2)}`);
+  // console.log(`allNft obtained: ${JSON.stringify(allNft, null, 2)}`);
 
   const nftsWithMetadata = await fetchNftMetadata(allNft?.result);
   console.log(`nft obj after metadata obtained:`);
