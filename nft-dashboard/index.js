@@ -1,5 +1,6 @@
 const serverUrl = "https://gppanowoee5f.usemoralis.com:2053/server";
 const appId = "RRTVGl64FMS7Zh4t73WEwBUqhLR9o9vDZLb3Q05Y";
+const CONTRACT_ADDRESS = "0xce6b4f3f56e3b001fbc994271c4e3ad0f78447b3";
 
 // uses application id from moralis server
 // uses serverUrl from moralis server
@@ -69,7 +70,7 @@ async function fetchNftMetadata(nftArray) {
   return nftWithMetadata;
 }
 
-function renderInventory(nftArray) {
+function renderInventory(nftArray, numTokensUnderCurrentAccount) {
   const parent = document.getElementById("inventory-display");
 
   for (let i = 0; i < nftArray.length; ++i) {
@@ -84,6 +85,9 @@ function renderInventory(nftArray) {
           <h5 class="card-title">${nft.metadata.name}</h5>
           <p class="card-text">${nft.metadata.description}</p>
           <p class="card-text">Number of owners: ${nft.owners?.length}</p>
+          <p class="card-text">Your balance: ${
+            numTokensUnderCurrentAccount[nft.token_id]
+          }</p>
           <p class="card-text">Tokens in circulation: ${nft.amount}</p>
           <a href="/nft-dashboard/mint.html?nftId=${
             nft.token_id
@@ -122,6 +126,27 @@ async function moralisLogout() {
   console.log("User is signed out");
 }
 
+async function getNumTokensUnderCurrentAccount() {
+  const accounts = Moralis.User.current().get("accounts");
+
+  // Just get the 1st account address
+  const options = {
+    chain: "mumbai",
+    address: accounts[0],
+    token_address: CONTRACT_ADDRESS,
+  };
+  return Moralis.Web3API.account.getNFTsForContract(options).then((res) => {
+    console.log(`Contract found under owner account ${accounts[0]}: `);
+    console.log(res);
+
+    let result = res.result.reduce((obj, current) => {
+      obj[current.token_id] = current.amount;
+      return obj;
+    }, {});
+    return result;
+  });
+}
+
 async function initialiseApp() {
   await moralisLogin();
 
@@ -130,7 +155,7 @@ async function initialiseApp() {
   // Ex Polygon has mumbai testnet and polygon mainnet. Hence, chain = "mumbai" for testnet
   // and "polygon" for mainnet
   const options = {
-    address: "0xce6b4f3f56e3b001fbc994271c4e3ad0f78447b3",
+    address: CONTRACT_ADDRESS,
     chain: "mumbai",
   };
   let allNft = await Moralis.Web3API.token.getAllTokenIds(options);
@@ -140,7 +165,16 @@ async function initialiseApp() {
   console.log(`nft obj after metadata obtained:`);
   console.log(nftsWithMetadata);
 
-  renderInventory(nftsWithMetadata);
+  const numTokensUnderCurrentAccount = await getNumTokensUnderCurrentAccount();
+  console.log(
+    `numTokensUnderCurrentAccount: ${JSON.stringify(
+      numTokensUnderCurrentAccount,
+      null,
+      2
+    )}`
+  );
+
+  renderInventory(nftsWithMetadata, numTokensUnderCurrentAccount);
 }
 // Have it run each time page is loaded
 initialiseApp();
